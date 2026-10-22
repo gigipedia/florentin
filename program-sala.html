@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Ghid video sală – Programele A, B, C, D</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #637083;
+      --line: #e1e7ef;
+      --blue: #1d4ed8;
+      --blue-soft: #eff6ff;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(135deg, #172554, #1d4ed8);
+      color: white; padding: 30px 18px 26px;
+    }
+    .wrap { width: min(900px, 100% - 28px); margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 4vw, 2.25rem); line-height: 1.15; }
+    header p { margin: 0; color: #dbeafe; max-width: 650px; }
+    main { padding: 22px 0 40px; }
+    .intro { color: var(--muted); margin: 0 0 18px; }
+    .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-bottom: 18px; }
+    .tab {
+      border: 1px solid #cbd5e1; border-radius: 13px; padding: 13px 10px;
+      background: white; color: var(--ink); font-weight: 750; font-size: 1rem; cursor: pointer;
+    }
+    .tab[aria-selected="true"] {
+      color: white; background: var(--blue); border-color: var(--blue);
+      box-shadow: 0 5px 14px #1d4ed826;
+    }
+    .program-heading { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin: 0 0 12px; }
+    h2 { font-size: 1.3rem; margin: 0; }
+    .count { color: var(--muted); font-size: .9rem; white-space: nowrap; }
+    .list { display: grid; gap: 12px; }
+    .exercise {
+      background: var(--card); border: 1px solid var(--line); border-radius: 15px;
+      padding: 15px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+    }
+    .exercise h3 { margin: 0 0 3px; font-size: 1.02rem; }
+    .query { margin: 0; color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
+    .buttons { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    a.action, button.action {
+      display: inline-flex; justify-content: center; align-items: center; gap: 7px;
+      border-radius: 10px; padding: 10px 12px; text-decoration: none; font-weight: 700;
+      border: 1px solid var(--blue); background: var(--blue); color: white;
+      font: inherit; font-size: .92rem; cursor: pointer; white-space: nowrap;
+    }
+    a.action.secondary, button.action.secondary { color: var(--blue); background: white; }
+    .tip {
+      background: var(--blue-soft); border: 1px solid #bfdbfe; border-radius: 13px;
+      padding: 13px 15px; color: #1e3a8a; margin: 18px 0 0; font-size: .94rem;
+    }
+    .footer { color: var(--muted); font-size: .85rem; margin-top: 22px; text-align: center; }
+    @media (max-width: 620px) {
+      .exercise { grid-template-columns: 1fr; }
+      .buttons { justify-content: stretch; }
+      .buttons a, .buttons button { flex: 1; }
+      .tab { padding: 12px 6px; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .exercise { animation: enter .18s ease-out; }
+      @keyframes enter { from { opacity: .6; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Ghid video pentru sală</h1>
+      <p>Metalmorphose Gym CUG · Alege programul și deschide demonstrațiile exercițiilor pe YouTube.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <p class="intro">Selectează A, B, C sau D. Pagina este statică: nu are nevoie de cont, server sau instalare.</p>
+    <nav class="tabs" aria-label="Alege programul">
+      <button class="tab" type="button" data-program="A" aria-selected="true">Program A</button>
+      <button class="tab" type="button" data-program="B" aria-selected="false">Program B</button>
+      <button class="tab" type="button" data-program="C" aria-selected="false">Program C</button>
+      <button class="tab" type="button" data-program="D" aria-selected="false">Program D</button>
+    </nav>
+    <section aria-live="polite">
+      <div class="program-heading">
+        <h2 id="program-title">Program A</h2>
+        <span class="count" id="exercise-count"></span>
+      </div>
+      <div class="list" id="exercise-list"></div>
+    </section>
+    <div class="tip"><strong>Sfat:</strong> rezultatele sunt căutări YouTube, nu videoclipuri verificate individual. Alege un clip care arată un aparat asemănător cu cel din sala ta; pentru exercițiile neclare, cere confirmarea antrenorului.</div>
+    <p class="footer">Ghid personal · funcționează pe telefon, tabletă și calculator.</p>
+  </main>
+  <script>
+    const programs = {
+      A: [
+        ["Lat Machine, priză neutră", "lat machine presa neutra"],
+        ["Ramat T-bar", "rematore T bar"],
+        ["Tracțiuni verticale din față", "lat pulldown davanti"],
+        ["Ramat cu triunghi", "pulley basso triangolo"],
+        ["Face Pull", "face pull"],
+        ["Push Down pentru triceps", "push down tricipiti corda"],
+        ["French Press", "french press manubri panca inclinata"],
+        ["Abdomene la sol", "crunch addominali terra"]
+      ],
+      B: [
+        ["Apropierea coapselor (Adductor)", "adductor machine esecuzione italiano"],
+        ["Extensii pentru picioare, câte un picior", "leg extension monolaterale esecuzione italiano"],
+        ["Presă pentru picioare, tălpi apropiate", "leg press piedi stretti esecuzione italiano"],
+        ["Împins cu gantere pe bancă înclinată", "distensioni manubri panca inclinata italiano"],
+        ["Fluturări la aparat pentru piept (Peck Deck)", "pec deck petto esecuzione italiano"],
+        ["Împins la aparat pentru piept (Chest Press)", "chest press machine esecuzione italiano"]
+      ],
+      C: [
+        ["Tracțiuni cu bandă elastică", "trazioni con elastico tecnica italiano"],
+        ["Ramat la cablu inferior cu frânghie", "rematore cavo basso corda italiano"],
+        ["Iliac Pulldown (confirmă varianta cu antrenorul)", "iliac pulldown exercise technique"],
+        ["Ramat unilateral la cablu", "rematore cavo unilaterale maniglia italiano"],
+        ["Extensii lombare (HPX)", "hyperextension lombari esecuzione italiano"],
+        ["Flexii pentru biceps cu bara EZ", "curl bilanciere EZ esecuzione italiano"],
+        ["Flexii Hammer pe bancă înclinată", "curl martello panca inclinata italiano"],
+        ["Abdomene la sol", "crunch addominali a terra italiano"]
+      ],
+      D: [
+        ["Ridicări pe vârfuri la presă (gambe)", "calf raises alla pressa esecuzione italiano"],
+        ["Flexii pentru femurali din șezut", "leg curl seduto esecuzione italiano"],
+        ["Hip Thrust la aparat", "hip thrust machine esecuzione italiano"],
+        ["Ridicări laterale cu gantere", "alzate laterali manubri esecuzione italiano"],
+        ["Împins cu gantere deasupra capului", "shoulder press manubri esecuzione italiano"],
+        ["Fluturări inverse la aparat (Reverse Pec Deck)", "reverse pec deck esecuzione italiano"]
+      ]
+    };
+
+    const list = document.getElementById("exercise-list");
+    const title = document.getElementById("program-title");
+    const count = document.getElementById("exercise-count");
+    const tabs = [...document.querySelectorAll(".tab")];
+
+    function render(program) {
+      title.textContent = `Program ${program}`;
+      count.textContent = `${programs[program].length} exerciții`;
+      list.replaceChildren();
+      programs[program].forEach(([name, query], index) => {
+        const card = document.createElement("article");
+        card.className = "exercise";
+
+        const info = document.createElement("div");
+        const heading = document.createElement("h3");
+        heading.textContent = `${index + 1}. ${name}`;
+        const searchText = document.createElement("p");
+        searchText.className = "query";
+        searchText.textContent = `Caută: ${query}`;
+        info.append(heading, searchText);
+
+        const actions = document.createElement("div");
+        actions.className = "buttons";
+        const video = document.createElement("a");
+        video.className = "action";
+        video.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+        video.target = "_blank";
+        video.rel = "noopener noreferrer";
+        video.textContent = "▶ Vezi pe YouTube";
+
+        const copy = document.createElement("button");
+        copy.className = "action secondary";
+        copy.type = "button";
+        copy.textContent = "Copiază căutarea";
+        copy.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(query);
+            copy.textContent = "Copiat!";
+            setTimeout(() => copy.textContent = "Copiază căutarea", 1400);
+          } catch {
+            window.prompt("Copiază textul căutării:", query);
+          }
+        });
+
+        actions.append(video, copy);
+        card.append(info, actions);
+        list.append(card);
+      });
+
+      tabs.forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.program === program)));
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, "", `#program-${program}`);
+      }
+    }
+
+    tabs.forEach(tab => tab.addEventListener("click", () => render(tab.dataset.program)));
+    const initialMatch = location.hash.match(/^#program-([ABCD])$/);
+    render(initialMatch ? initialMatch[1] : "A");
+  </script>
+</body>
+</html>
